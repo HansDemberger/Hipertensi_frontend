@@ -1,9 +1,7 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-// import 'hipertensi.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'home.dart';
 
 class LoginPage extends StatefulWidget {
@@ -29,8 +27,7 @@ class _LoginPageState extends State<LoginPage> {
       return;
     }
 
-    final String apiUrl =
-        'http://localhost:5000/api/login';
+    final String apiUrl = 'http://localhost:5000/api/login'; // Ganti jika pakai Android Emulator
 
     final Map<String, dynamic> requestData = {
       'email': email,
@@ -52,6 +49,16 @@ class _LoginPageState extends State<LoginPage> {
       final responseData = json.decode(response.body);
 
       if (response.statusCode == 200) {
+        final token = responseData['token'];
+        final user = responseData['user'];
+        final nama = user['username'];
+        final email = user['email'];
+
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('jwt_token', token);
+        await prefs.setString('nama', nama);
+        await prefs.setString('email', email);
+
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const HomePage()),
@@ -75,16 +82,14 @@ class _LoginPageState extends State<LoginPage> {
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
           child: Card(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
             elevation: 8,
             child: Padding(
               padding: const EdgeInsets.all(24),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(Icons.lock_open,
-                      size: 60, color: Colors.blueAccent),
+                  const Icon(Icons.lock_open, size: 60, color: Colors.blueAccent),
                   const SizedBox(height: 16),
                   const Text(
                     'Login',
@@ -119,18 +124,14 @@ class _LoginPageState extends State<LoginPage> {
                           width: double.infinity,
                           child: ElevatedButton.icon(
                             onPressed: _login,
-                            icon: const Icon(Icons.login,
-                                color: Colors.white), // Icon jadi putih
+                            icon: const Icon(Icons.login, color: Colors.white),
                             label: const Text(
                               'Login',
-                              style: TextStyle(
-                                  color: Colors.white), // Text jadi putih
+                              style: TextStyle(color: Colors.white),
                             ),
                             style: ElevatedButton.styleFrom(
                               padding: const EdgeInsets.symmetric(vertical: 16),
                               backgroundColor: Colors.blueAccent,
-                              foregroundColor: Colors
-                                  .white, // opsional, jaga-jaga jika ada tema global
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),

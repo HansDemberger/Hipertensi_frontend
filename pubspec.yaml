@@ -31,10 +31,13 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  http: ^0.13.5
-  intl: ^0.18.0
+  # http: ^0.13.5
+  # intl: ^0.18.0
   fl_chart: ^0.64.0
-  shared_preferences: ^2.0.15
+  # shared_preferences: ^2.0.15
+  shared_preferences: ^2.2.2
+  intl: ^0.18.1
+  http: ^1.1.0
 
   
   

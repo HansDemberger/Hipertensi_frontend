@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:hipertensii/pola_hidup_sehat.dart';
 import 'hipertensi.dart';
 import 'profile.dart';
@@ -12,6 +13,20 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
+  String _nama = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadNama();
+  }
+
+  Future<void> _loadNama() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _nama = prefs.getString('nama') ?? '';
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,37 +40,46 @@ class _HomePageState extends State<HomePage> {
               // Header
               Container(
                 width: double.infinity,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
                 decoration: const BoxDecoration(
                   color: Color(0xFF3B82F6),
                   borderRadius: BorderRadius.vertical(
                     bottom: Radius.circular(24),
                   ),
                 ),
-                child: const Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Hi, Selamat Datang!',
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Selamat Datang!',
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
+                    const SizedBox(height: 4),
+                    Text(
+                      _nama,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
                 ),
               ),
 
               const SizedBox(height: 32),
 
               // Judul Tengah
-                const Padding(
+              const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 24),
                 child: Center(
                   child: Text(
                     'PREDIKSI HIPERTENSI\nBERDASARKAN GAYA HIDUP\nMENGGUNAKAN NEURAL NETWORK',
-                    textAlign:
-                        TextAlign.center, // pastikan ini juga ditambahkan
+                    textAlign: TextAlign.center,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
@@ -81,7 +105,8 @@ class _HomePageState extends State<HomePage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const PolaHidupSehat()),
+                              builder: (context) => const PolaHidupSehat(),
+                            ),
                           );
                         },
                       ),
@@ -96,7 +121,8 @@ class _HomePageState extends State<HomePage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const Hipertensi()),
+                              builder: (context) => const Hipertensi(),
+                            ),
                           );
                         },
                       ),
@@ -113,8 +139,7 @@ class _HomePageState extends State<HomePage> {
                 child: Center(
                   child: Text(
                     'Catatan Edukasi',
-                    textAlign:
-                        TextAlign.center, // pastikan ini juga ditambahkan
+                    textAlign: TextAlign.center,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
@@ -135,12 +160,12 @@ class _HomePageState extends State<HomePage> {
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(color: Colors.blue.shade100),
-                    boxShadow: [
+                    boxShadow: const [
                       BoxShadow(
                         color: Colors.black12,
                         blurRadius: 4,
                         offset: Offset(0, 2),
-                      )
+                      ),
                     ],
                   ),
                   child: const Column(
@@ -167,7 +192,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       SizedBox(height: 6),
                       Text(
-                        'Tekanan darah tidak digunakan sebagai fitur input dalam prediksi hipertensi karena nilai tersebut adalah penentu utama diagnosis hipertensi. Jika tekanan darah sudah diketahui, maka hasilnya bisa langsung ditentukan tanpa perlu prediksi. Memasukkan tensi ke dalam model justru akan menyebabkan kebocoran data (data leakage), yaitu kondisi saat model “mengetahui jawaban” sebelum memproses prediksi. Hal ini membuat hasil terlihat akurat, tapi tidak berguna dalam praktik nyata. Oleh karena itu, aplikasi ini hanya menggunakan faktor risiko seperti usia, jenis kelamin, dan hasil pemeriksaan lainnya untuk membantu deteksi dini hipertensi, terutama bagi pengguna yang belum mengetahui tekanan darahnya.',
+                        'Tekanan darah tidak digunakan sebagai fitur input dalam prediksi hipertensi karena nilai tersebut adalah penentu utama diagnosis hipertensi. Jika tekanan darah sudah diketahui, maka hasilnya bisa langsung ditentukan tanpa perlu prediksi...',
                       ),
                       SizedBox(height: 12),
                       Text(
